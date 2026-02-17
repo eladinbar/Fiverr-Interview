@@ -12,7 +12,6 @@ A URL shortening service for Fiverr sellers to generate short, clean, trackable 
 1. Clone the repository:
    ```bash
    git clone https://github.com/eladinbar/Fiverr-Interview.git
-   cd fiverr-url-shortener
    ```
 
 2. Start the Docker containers:
