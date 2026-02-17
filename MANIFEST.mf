@@ -1,0 +1,102 @@
+# Fiverr URL Shortener - Implementation Manifest
+
+## What Works
+- Link generation with unique short codes
+- Duplicate URL detection and handling
+- Redirection functionality with click tracking
+- Fraud validation simulation (500ms delay, 50% success)
+- Credit awarding for valid clicks (0.05$)
+- Comprehensive API stats with monthly breakdown
+- Pagination for large datasets
+- Thorough input validation
+- Error handling for edge cases
+- Database persistence with PostgreSQL
+
+## What is Missing
+- Nothing missing from core requirements - all specified functionality has been implemented
+- Additional error responses could be added (beyond the required functionality)
+- More comprehensive input sanitization could be added
+- Could add metadata to links (e.g., created_by, category)
+- Performance optimization for high-volume stats queries
+
+## DB Justification
+PostgreSQL was chosen as the database for the following reasons:
+
+1. **Relational Data Structure**: The URL shortener has a clear relational model between links and clicks, making a relational database like PostgreSQL an ideal fit.
+
+2. **Transaction Support**: PostgreSQL's ACID compliance ensures data integrity when recording clicks and awarding credits, preventing data loss in concurrent scenarios.
+
+3. **Indexing Capabilities**: PostgreSQL's advanced indexing supports fast lookups by short_code and efficient filtering of links.
+
+4. **Aggregation Functions**: Built-in functions for statistics calculation (COUNT, SUM) and date extraction (for monthly reports) simplify analytics queries.
+
+5. **Docker Integration**: PostgreSQL has excellent Docker support, making development and deployment consistent across environments.
+
+6. **Scalability**: While NoSQL might handle more requests per second in some cases, the data volume for this application is predictable and PostgreSQL can easily scale to handle the expected load.
+
+## Trade-offs
+
+1. **Short Code Generation**: Used a simple random string generator rather than a more sophisticated approach like hashids or base62 encoding. This works well for the current scale but might lead to longer codes as the system grows.
+
+2. **Fraud Validation**: Implemented a simplified mock with 50% validation rate and 500ms delay, rather than a true fraud detection system which would be more complex but essential in production.
+
+3. **Monolithic Design**: Kept the entire application in a single file for simplicity, rather than splitting into modules (routes, models, services), which would be better for a larger codebase.
+
+4. **Test Coverage**: Focused tests on core functionality rather than 100% coverage of edge cases due to time constraints.
+
+5. **Database Schema**: Used simple integer IDs rather than UUIDs, which would provide better distribution for sharding in a large-scale deployment.
+
+## AI Usage & Prompts
+
+The following prompts were used with Claude to build this application:
+
+1. Initial prompt:
+```
+I want to create a system that allows the creation of shareable links - short, clean, trackable urls that can point to any seller owned page on Fiverr, e.g. a gig, portfolio item or other promotional destination. (this is an interview test, not an actual real world application and this is the context given to us).
+The Core Loop:
+Generate: A seller generates a short link for their Gig
+Share: The post it on social media
+Reward: When someone clicks the link fiverr redirects them to the original page and and rewards the seller with 0.05$ in fiverr credits for each valid click.
+
+My mission is to design and implement the backend service that powers this experience.
+
+I already have postgres set up with python using sql alchemy, pydantic and fastapi with a test database table called items (we should replace this table with the requirements for this task).
+
+Here are the functional requirements given to us:
+POST /links - Short link generation
+* Create an endpoint to accept a target URL and return a unique short URL.
+* If multiple requests are made to generate the same URL, the system must return the existing URL.
+
+GET /:short_code - Redirection and Tracking:
+* Clicking the short link must redirect to the target URL
+* The 0.05$ credit is awarded only for links that passed a fraud validation, simulating this with a function that takes 500ms to complete and return true and false in 50% probability.
+
+GET /stats - global analytics:
+* Returns a list of all generated links
+* The list must be paginated
+* For each link, create a grouped report of link performance that aggregates lifetime total while maintaing a monthly stats.
+```
+
+2. Follow-up questions:
+```
+What exactly do they mean by short link generation? What would be an example non-short link as an input and what would be a possible output?
+```
+
+3. Testing request:
+```
+I need to provide a sufficient automated test suite that covers core functionalities. We can use whichever test runner matches our stack (Pytest or any other test library you deem appropriate for our stack).
+I should take careful measures to handle edge cases in the implementation (e.g. invalid inputs, missing parameters, etc.).
+```
+
+4. Docker configuration help:
+```
+I'm trying to get my mental model about this straight - what would be an example non-short link as an input and what would be a possible output? Also, what approach have you taken to shorten links?
+```
+
+5. Debugging assistance:
+```
+I get this error: docker exec -it app python tests/run_all_tests.py
+Error response from daemon: No such container: app
+
+Does that mean that we need to put all requirements into requirements.txt (as opposed to splitting them into requirements.txt and requirements_test.txt?)
+```

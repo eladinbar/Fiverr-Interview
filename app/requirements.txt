@@ -1,5 +1,12 @@
-fastapi
-uvicorn
-sqlalchemy
-psycopg2-binary
-pydantic
+fastapi==0.129.0
+uvicorn==0.31.0
+sqlalchemy==2.0.46
+psycopg2-binary==2.9.9
+pydantic==2.12.5
+python-multipart==0.0.9
+requests==2.31.0
+
+# Testing dependencies
+pytest==7.3.1
+pytest-asyncio==0.21.1
+httpx==0.24.1
