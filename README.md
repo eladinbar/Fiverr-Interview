@@ -11,7 +11,7 @@ A URL shortening service for Fiverr sellers to generate short, clean, trackable 
 ### Installation and Running
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/fiverr-url-shortener.git
+   git clone https://github.com/eladinbar/Fiverr-Interview.git
    cd fiverr-url-shortener
    ```
 
